@@ -30,6 +30,16 @@ namespace Architecture.Logic
         {
         }
 
+        public void UpdatePosition(Vector3 position)
+        {
+            Position = position;
+        }
+        
+        public void UpdateRotation(Quaternion rotation)
+        {
+            Rotation = rotation;
+        }
+        
         public virtual void Dispose()
         {
         }
