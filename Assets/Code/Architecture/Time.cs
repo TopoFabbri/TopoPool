@@ -2,7 +2,7 @@
 using ImageCampus.ToolBox.ServiceProvider;
 using ImageCampus.ToolBox.Updateable;
 
-namespace Architecture.Time
+namespace Architecture
 {
     public sealed class Time : IService, ITickable, IDisposable
     {
