@@ -1,5 +1,7 @@
 ﻿using System;
+using Architecture.Events;
 using Architecture.Logic.Entities;
+using ImageCampus.ToolBox.Events;
 using ImageCampus.ToolBox.ServiceProvider;
 using ImageCampus.ToolBox.Updateable;
 
@@ -10,22 +12,25 @@ namespace Architecture.Logic
         private BallsLogic ballsLogic;
 
         private Player player;
-        
-        EntityFactory EntityFactory => ServiceProvider.Instance.GetService<EntityFactory>();
-        
+
+        private EntityFactory EntityFactory => ServiceProvider.Instance.GetService<EntityFactory>();
+        private EventBus      EventBus      => ServiceProvider.Instance.GetService<EventBus>();
+
         public Scene(int ballCount)
         {
             ServiceProvider.Instance.AddService<EntityFactory>(new EntityFactory());
-            
+
             ballsLogic = new BallsLogic(ballCount);
         }
-        
+
         public void Init()
         {
             player = EntityFactory.CreateEntity<Player>(true);
-            
+
             player.Init();
             ballsLogic.Init();
+
+            EventBus.Subscribe<PhysicsEntityUpdatedState>(OnPhysicsUpdated);
         }
 
         public void LateInit()
@@ -45,6 +50,14 @@ namespace Architecture.Logic
             player.Dispose();
             EntityFactory.Dispose();
             ballsLogic.Dispose();
+
+            EventBus.Unsubscribe<PhysicsEntityUpdatedState>(OnPhysicsUpdated);
+        }
+
+        private void OnPhysicsUpdated(in PhysicsEntityUpdatedState physicsEntityUpdatedStateData)
+        {
+            if (physicsEntityUpdatedStateData.id == player.Id)
+                player.UpdatePhysics(physicsEntityUpdatedStateData.position);
         }
     }
 }

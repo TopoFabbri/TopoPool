@@ -35,7 +35,7 @@ namespace Architecture.Logic
             foreach (Ball ball in balls.Values)
                 ball.Init();
             
-            EventBus.Subscribe<BallUpdatedState>(OnBallUpdatedState);
+            EventBus.Subscribe<PhysicsEntityUpdatedState>(OnBallUpdatedState);
         }
 
         public void LateInit()
@@ -55,19 +55,15 @@ namespace Architecture.Logic
             foreach (Ball ball in balls.Values)
                 ball.Dispose();
             
-            EventBus.Unsubscribe<BallUpdatedState>(OnBallUpdatedState);
+            EventBus.Unsubscribe<PhysicsEntityUpdatedState>(OnBallUpdatedState);
         }
 
-        private void OnBallUpdatedState(in BallUpdatedState ballUpdatedStateData)
+        private void OnBallUpdatedState(in PhysicsEntityUpdatedState physicsEntityUpdatedStateData)
         {
-            if (balls.TryGetValue(ballUpdatedStateData.id, out Ball ball))
+            if (balls.TryGetValue(physicsEntityUpdatedStateData.id, out Ball ball))
             {
-                ball.UpdatePosition(ballUpdatedStateData.position);
-                ball.UpdateRotation(ballUpdatedStateData.rotation);
-            }
-            else
-            {
-                EventBus.Raise<BallDestroyedEvent>(ballUpdatedStateData.id);
+                ball.UpdatePosition(physicsEntityUpdatedStateData.position);
+                ball.UpdateRotation(physicsEntityUpdatedStateData.rotation);
             }
         }
     }

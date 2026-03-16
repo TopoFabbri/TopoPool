@@ -76,6 +76,11 @@ namespace Architecture.Logic.Entities
             
             moveSpeed = Math.Clamp(moveSpeed, Settings.MinSpeed, Settings.MaxSpeed);
         }
+        
+        public void UpdatePhysics(Vector3 position)
+        {
+            moveVector = position - Position;
+        }
 
         private void CalculateRotation()
         {
