@@ -17,7 +17,7 @@ namespace View.LogicView
 
         private void Awake()
         {
-            gameplay = new Gameplay();
+            gameplay = new Gameplay(Application.persistentDataPath);
         }
 
         private void Start()

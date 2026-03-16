@@ -8,30 +8,33 @@ namespace Architecture.Logic
 {
     public sealed class Gameplay : IInitable, ITickable, IDisposable
     {
-        ServiceProvider ServiceProvider => ServiceProvider.Instance;
-        Time Time => ServiceProvider.GetService<Time>();
+        private ServiceProvider ServiceProvider => ServiceProvider.Instance;
+        private Time            Time            => ServiceProvider.GetService<Time>();
+        private Settings        Settings        => ServiceProvider.GetService<Settings>();
 
         private Scene scene;
-        
-        public Gameplay()
+
+        public Gameplay(string persistentDataPath)
         {
             ServiceProvider.AddService<Time>(new Time());
             ServiceProvider.AddService<EventBus>(new EventBus());
-            ServiceProvider.AddService<Settings>(new Settings());
-            
+            ServiceProvider.AddService<Settings>(new Settings(persistentDataPath));
+
             scene = new Scene(10);
         }
-            
+
         public void Init()
         {
             scene.Init();
-            
+            Settings.Init();
+
             GameConsole.Log("Gameplay initialized");
         }
 
         public void LateInit()
         {
             scene.LateInit();
+            Settings.LateInit();
 
             GameConsole.Log("Gameplay late initialized");
         }
@@ -45,6 +48,7 @@ namespace Architecture.Logic
         public void Dispose()
         {
             scene.Dispose();
+            Settings.Dispose();
         }
     }
 }
