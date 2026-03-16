@@ -17,6 +17,7 @@ namespace Architecture.Logic
         {
             ServiceProvider.AddService<Time>(new Time());
             ServiceProvider.AddService<EventBus>(new EventBus());
+            ServiceProvider.AddService<Settings>(new Settings());
             
             scene = new Scene(10);
         }

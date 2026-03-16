@@ -8,8 +8,7 @@ namespace Architecture.Logic.Entities
 {
     public class Player : Entity
     {
-        private float moveSpeed   = 10f;
-        private float rotateSpeed = 0.1f;
+        private float moveSpeed = 10f;
 
         private Vector3 moveVector;
         private Vector2 rotationDelta;
@@ -20,8 +19,11 @@ namespace Architecture.Logic.Entities
         private bool isMainPlayer;
 
         EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        Settings Settings => ServiceProvider.Instance.GetService<Settings>();
 
-        public Player(uint id) : base(id) { }
+        public Player(uint id) : base(id)
+        {
+        }
 
         public override void Configure(params object[] parameters)
         {
@@ -43,7 +45,7 @@ namespace Architecture.Logic.Entities
             base.Tick(deltaTime);
 
             CalculateRotation();
-            
+
             UpdatePosition(Position + Vector3.Transform(moveVector, Rotation) * deltaTime);
         }
 
@@ -62,31 +64,24 @@ namespace Architecture.Logic.Entities
 
         private void OnRotateEvent(in RotateEvent rotateEventData)
         {
-            rotationDelta = rotateEventData.rotation * rotateSpeed;
+            rotationDelta.X = rotateEventData.rotation.X * Settings.HorizontalSensitivity;
+            rotationDelta.Y = rotateEventData.rotation.Y * Settings.VerticalSensitivity;
         }
-        
+
         private void CalculateRotation()
         {
-            if (rotationDelta.X == 0 && rotationDelta.Y == 0) return;
+            if (rotationDelta is { X: 0, Y: 0 }) return;
 
-            // Accumulate yaw (horizontal) and pitch (vertical)
             yaw += rotationDelta.X;
-            pitch -= rotationDelta.Y; // Subtracted to match standard non-inverted mouse look
+            pitch -= rotationDelta.Y;
 
-            // Clamp vertical rotation between 90 up and 90 down
             if (pitch > 90f) pitch = 90f;
             else if (pitch < -90f) pitch = -90f;
 
-            // Convert to radians for System.Numerics
-            float yawRad   = yaw * (float)(Math.PI / 180.0);
-            float pitchRad = pitch * (float)(Math.PI / 180.0);
+            Quaternion newRotation = Quaternion.CreateFromYawPitchRoll(yaw * (float)(Math.PI / 180.0), pitch * (float)(Math.PI / 180.0), 0f);
 
-            // CreateFromYawPitchRoll applies Yaw (World Y), Pitch (Local X), then Roll (Z)
-            Quaternion newRotation = Quaternion.CreateFromYawPitchRoll(yawRad, pitchRad, 0f);
-            
             UpdateRotation(newRotation);
 
-            // Consume the delta input
             rotationDelta = Vector2.Zero;
         }
     }
