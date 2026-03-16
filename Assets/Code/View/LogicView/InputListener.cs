@@ -17,5 +17,12 @@ namespace View.LogicView
 
             EventBus.Raise<MoveEvent>(new Vector3(movement.x, movement.y, movement.z));
         }
+        
+        public void OnLook(InputValue input)
+        {
+            Vector2 rotation = input.Get<Vector2>();
+            
+            EventBus.Raise<RotateEvent>(new System.Numerics.Vector2(rotation.x, rotation.y));
+        }
     }
 }

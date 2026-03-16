@@ -47,6 +47,7 @@ namespace Architecture.Logic
         public void UpdateRotation(Quaternion rotation)
         {
             Rotation = rotation;
+            EventBus.Raise<EntityRotationUpdateEvent>(Id, rotation);
         }
         
         public virtual void Dispose()

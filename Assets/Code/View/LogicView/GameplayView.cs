@@ -50,6 +50,8 @@ namespace View.LogicView
             playersViewController.LateInit();
             ballsViewController.LateInit();
             gameplay.LateInit();
+            
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         public void Tick(float deltaTime)

@@ -21,6 +21,7 @@ namespace View.LogicView.Controllers
         {
             EventBus.Subscribe<PlayerCreatedEvent>(OnPlayerCreated);
             EventBus.Subscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
+            EventBus.Subscribe<EntityRotationUpdateEvent>(OnEntityRotationUpdate);
         }
 
         public void LateInit()
@@ -35,6 +36,7 @@ namespace View.LogicView.Controllers
         {
             EventBus.Unsubscribe<PlayerCreatedEvent>(OnPlayerCreated);
             EventBus.Unsubscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
+            EventBus.Unsubscribe<EntityRotationUpdateEvent>(OnEntityRotationUpdate);
         }
 
         private void OnPlayerCreated(in PlayerCreatedEvent playerCreatedEventData)
@@ -52,6 +54,14 @@ namespace View.LogicView.Controllers
             if (players.TryGetValue(entityPositionUpdateEventData.ID, out PlayerView playerView))
             {
                 playerView.transform.position = new Vector3(entityPositionUpdateEventData.Position.X, entityPositionUpdateEventData.Position.Y, entityPositionUpdateEventData.Position.Z);
+            }
+        }
+
+        private void OnEntityRotationUpdate(in EntityRotationUpdateEvent entityRotationUpdateEventData)
+        {
+            if (players.TryGetValue(entityRotationUpdateEventData.ID, out PlayerView playerView))
+            {
+                playerView.transform.rotation = new Quaternion(entityRotationUpdateEventData.Rotation.X, entityRotationUpdateEventData.Rotation.Y, entityRotationUpdateEventData.Rotation.Z, entityRotationUpdateEventData.Rotation.W);
             }
         }
     }
