@@ -11,9 +11,14 @@ namespace Architecture.Logic.Entities
      
         EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         
-        public Ball(bool solid, Vector3 position, uint id) : base(position, Quaternion.Identity, id)
+        public Ball(uint id) : base(id)
         {
-            Solid = solid;
+        }
+
+        public override void Configure(params object[] parameters)
+        {
+            UpdatePosition((Vector3) parameters[0]);
+            Solid = (bool) parameters[1];
         }
 
         public override void Init()

@@ -16,7 +16,8 @@ namespace Architecture.Logic
         private readonly Dictionary<uint, Ball> balls = new();
 
         EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-        
+        EntityFactory EntityFactory => ServiceProvider.Instance.GetService<EntityFactory>();
+
         public BallsLogic(int ballCount)
         {
             this.ballCount = ballCount;
@@ -25,7 +26,11 @@ namespace Architecture.Logic
         public void Init()
         {
             for (int i = 0; i < ballCount; i++)
-                balls.Add((uint)i, new Ball(i >= ballCount / 2, Vector3.Zero + Vector3.UnitX * i * 0.1f + Vector3.UnitY, (uint)i));
+            {
+                Ball instance = EntityFactory.CreateEntity<Ball>(new Vector3(i * .2f, 0, 0), i >= ballCount / 2);
+                
+                balls.Add(instance.Id, instance);
+            }
             
             foreach (Ball ball in balls.Values)
                 ball.Init();

@@ -2,14 +2,16 @@
 using Architecture.Logic;
 using ImageCampus.ToolBox.Updateable;
 using UnityEngine;
+using View.LogicView.Controllers;
 using View.LogicView.EntitiesView;
 
 namespace View.LogicView
 {
     public class GameplayView : MonoBehaviour, IInitable, ITickable, IDisposable
     {
-        [SerializeField] private ConsoleView         consoleView;
-        [SerializeField] private BallsViewController ballsViewController;
+        [SerializeField] private ConsoleView           consoleView;
+        [SerializeField] private BallsViewController   ballsViewController;
+        [SerializeField] private PlayersViewController playersViewController;
 
         private Gameplay gameplay;
 
@@ -37,6 +39,7 @@ namespace View.LogicView
         public void Init()
         {
             consoleView.Init();
+            playersViewController.Init();
             ballsViewController.Init();
             gameplay.Init();
         }
@@ -44,18 +47,21 @@ namespace View.LogicView
         public void LateInit()
         {
             consoleView.LateInit();
+            playersViewController.LateInit();
             ballsViewController.LateInit();
             gameplay.LateInit();
         }
 
         public void Tick(float deltaTime)
         {
+            playersViewController.Tick(deltaTime);
             ballsViewController.Tick(deltaTime);
             gameplay.Tick(deltaTime);
         }
 
         public void Dispose()
         {
+            playersViewController.Dispose();
             ballsViewController.Dispose();
             gameplay.Dispose();
         }

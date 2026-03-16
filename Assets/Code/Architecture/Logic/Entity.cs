@@ -1,22 +1,30 @@
 ﻿using System;
 using System.Numerics;
+using Architecture.Events;
+using ImageCampus.ToolBox.Events;
+using ImageCampus.ToolBox.ServiceProvider;
 using ImageCampus.ToolBox.Updateable;
 
 namespace Architecture.Logic
 {
     public abstract class Entity : IInitable, ITickable, IDisposable
     {
-        public Vector3    Position { get; private set; }
-        public Quaternion Rotation { get; private set; }
+        protected Vector3    Position { get; private set; }
+        protected Quaternion Rotation { get; private set; }
 
         public uint Id { get; private set; }
 
-        protected Entity(Vector3 position, Quaternion rotation, uint id)
+        private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        
+        protected Entity(uint id)
         {
-            Position = position;
-            Rotation = rotation;
             Id = id;
+            
+            Position = Vector3.Zero;
+            Rotation = Quaternion.Identity;
         }
+
+        public abstract void Configure(params object[] parameters);
         
         public virtual void Init()
         {
@@ -33,6 +41,7 @@ namespace Architecture.Logic
         public void UpdatePosition(Vector3 position)
         {
             Position = position;
+            EventBus.Raise<EntityPositionUpdateEvent>(Id, position);
         }
         
         public void UpdateRotation(Quaternion rotation)
