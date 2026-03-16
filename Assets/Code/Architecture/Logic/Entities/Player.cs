@@ -13,8 +13,8 @@ namespace Architecture.Logic.Entities
         private Vector3 moveVector;
         private Vector2 rotationDelta;
 
-        private float pitch = 0f;
-        private float yaw   = 0f;
+        private float pitch;
+        private float yaw;
 
         private bool isMainPlayer;
 
@@ -36,6 +36,7 @@ namespace Architecture.Logic.Entities
 
             EventBus.Subscribe<MoveEvent>(OnMoveEvent);
             EventBus.Subscribe<RotateEvent>(OnRotateEvent);
+            EventBus.Subscribe<ChangeSpeedEvent>(OnChangeSpeedEvent);
 
             EventBus.Raise<PlayerCreatedEvent>(Id, isMainPlayer);
         }
@@ -55,6 +56,7 @@ namespace Architecture.Logic.Entities
 
             EventBus.Unsubscribe<MoveEvent>(OnMoveEvent);
             EventBus.Unsubscribe<RotateEvent>(OnRotateEvent);
+            EventBus.Unsubscribe<ChangeSpeedEvent>(OnChangeSpeedEvent);
         }
 
         private void OnMoveEvent(in MoveEvent moveEventData)
@@ -66,6 +68,13 @@ namespace Architecture.Logic.Entities
         {
             rotationDelta.X = rotateEventData.rotation.X * Settings.HorizontalSensitivity;
             rotationDelta.Y = rotateEventData.rotation.Y * Settings.VerticalSensitivity;
+        }
+        
+        private void OnChangeSpeedEvent(in ChangeSpeedEvent changeSpeedEventData)
+        {
+            moveSpeed += changeSpeedEventData.Value;
+            
+            moveSpeed = Math.Clamp(moveSpeed, Settings.MinSpeed, Settings.MaxSpeed);
         }
 
         private void CalculateRotation()

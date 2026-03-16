@@ -24,5 +24,12 @@ namespace View.LogicView
             
             EventBus.Raise<RotateEvent>(new System.Numerics.Vector2(rotation.x, rotation.y));
         }
+        
+        public void OnChangeSpeed(InputValue input)
+        {
+            float value = input.Get<float>();
+            
+            EventBus.Raise<ChangeSpeedEvent>(value);
+        }
     }
 }

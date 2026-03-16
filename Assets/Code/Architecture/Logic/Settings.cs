@@ -8,5 +8,8 @@ namespace Architecture.Logic
         
         public float HorizontalSensitivity { get; set; } = .1f;
         public float VerticalSensitivity { get; set; } = .1f;
+        
+        public float MinSpeed { get; set; } = 0.01f;
+        public float MaxSpeed { get; set; } = 10f;
     }
 }
