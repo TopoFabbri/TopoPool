@@ -15,17 +15,16 @@ namespace Architecture.Logic
         public uint Id { get; private set; }
 
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-        
+
         protected Entity(uint id)
         {
             Id = id;
-            
             Position = Vector3.Zero;
             Rotation = Quaternion.Identity;
         }
 
         public abstract void Configure(params object[] parameters);
-        
+
         public virtual void Init()
         {
         }
@@ -38,18 +37,24 @@ namespace Architecture.Logic
         {
         }
 
+        public void SyncPhysicsState(Vector3 position, Quaternion rotation)
+        {
+            Position = position;
+            Rotation = rotation;
+        }
+
         public void UpdatePosition(Vector3 position)
         {
             Position = position;
             EventBus.Raise<EntityPositionUpdateEvent>(Id, position);
         }
-        
+
         public void UpdateRotation(Quaternion rotation)
         {
             Rotation = rotation;
             EventBus.Raise<EntityRotationUpdateEvent>(Id, rotation);
         }
-        
+
         public virtual void Dispose()
         {
         }

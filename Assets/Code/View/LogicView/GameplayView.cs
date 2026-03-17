@@ -3,7 +3,6 @@ using Architecture.Logic;
 using ImageCampus.ToolBox.Updateable;
 using UnityEngine;
 using View.LogicView.Controllers;
-using View.LogicView.EntitiesView;
 
 namespace View.LogicView
 {

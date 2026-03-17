@@ -10,8 +10,9 @@ namespace View.LogicView.EntitiesView
         [SerializeField] private Camera    cam;
         [SerializeField] private Rigidbody rb;
 
-        private System.Numerics.Vector3 position;
+        private System.Numerics.Vector3    position;
         private System.Numerics.Quaternion rotation;
+        private Vector3        desiredVelocity;
         
         public uint ID { get; private set; }
 
@@ -31,9 +32,11 @@ namespace View.LogicView.EntitiesView
 
         private void FixedUpdate()
         {
-            if (rb.IsSleeping())
+            if (rb.IsSleeping() && desiredVelocity.sqrMagnitude == 0)
                 return;
             
+            rb.linearVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocity.z);
+
             UpdatePositionAndRotation();
             EventBus.Raise<PhysicsEntityUpdatedState>(ID, position, rotation);
         }
@@ -42,6 +45,11 @@ namespace View.LogicView.EntitiesView
         {
             position = new System.Numerics.Vector3(transform.position.x, transform.position.y, transform.position.z);
             rotation = new System.Numerics.Quaternion(transform.rotation.x, transform.rotation.y, transform.rotation.z, transform.rotation.w);
+        }
+
+        public void SetDesiredVelocity(Vector3 velocity)
+        {
+            desiredVelocity = velocity;
         }
     }
 }

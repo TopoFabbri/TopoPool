@@ -57,7 +57,7 @@ namespace Architecture.Logic
         private void OnPhysicsUpdated(in PhysicsEntityUpdatedState physicsEntityUpdatedStateData)
         {
             if (physicsEntityUpdatedStateData.id == player.Id)
-                player.UpdatePhysics(physicsEntityUpdatedStateData.position);
+                player.SyncPhysicsState(physicsEntityUpdatedStateData.position, physicsEntityUpdatedStateData.rotation);
         }
     }
 }

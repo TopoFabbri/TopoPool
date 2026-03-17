@@ -46,8 +46,8 @@ namespace Architecture.Logic.Entities
             base.Tick(deltaTime);
 
             CalculateRotation();
-
-            UpdatePosition(Position + Vector3.Transform(moveVector, Rotation) * deltaTime);
+            
+            EventBus.Raise<EntityVelocityUpdateEvent>(Id, Vector3.Transform(moveVector, Rotation));
         }
 
         public override void Dispose()
@@ -75,11 +75,6 @@ namespace Architecture.Logic.Entities
             moveSpeed += changeSpeedEventData.Value;
             
             moveSpeed = Math.Clamp(moveSpeed, Settings.MinSpeed, Settings.MaxSpeed);
-        }
-        
-        public void UpdatePhysics(Vector3 position)
-        {
-            moveVector = position - Position;
         }
 
         private void CalculateRotation()

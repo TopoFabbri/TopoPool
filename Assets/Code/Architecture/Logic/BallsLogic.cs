@@ -61,10 +61,7 @@ namespace Architecture.Logic
         private void OnBallUpdatedState(in PhysicsEntityUpdatedState physicsEntityUpdatedStateData)
         {
             if (balls.TryGetValue(physicsEntityUpdatedStateData.id, out Ball ball))
-            {
-                ball.UpdatePosition(physicsEntityUpdatedStateData.position);
-                ball.UpdateRotation(physicsEntityUpdatedStateData.rotation);
-            }
+                ball.SyncPhysicsState(physicsEntityUpdatedStateData.position, physicsEntityUpdatedStateData.rotation);
         }
     }
 }

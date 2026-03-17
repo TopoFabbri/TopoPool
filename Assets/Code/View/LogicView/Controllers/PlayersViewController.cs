@@ -12,6 +12,7 @@ namespace View.LogicView.Controllers
     internal class PlayersViewController : MonoBehaviour, IInitable, ITickable, IDisposable
     {
         [SerializeField] private PlayerView playerViewPrefab;
+        [SerializeField] private Transform  playersParent;
 
         private readonly Dictionary<uint, PlayerView> players = new();
 
@@ -22,6 +23,7 @@ namespace View.LogicView.Controllers
             EventBus.Subscribe<PlayerCreatedEvent>(OnPlayerCreated);
             EventBus.Subscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
             EventBus.Subscribe<EntityRotationUpdateEvent>(OnEntityRotationUpdate);
+            EventBus.Subscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
         }
 
         public void LateInit()
@@ -37,6 +39,7 @@ namespace View.LogicView.Controllers
             EventBus.Unsubscribe<PlayerCreatedEvent>(OnPlayerCreated);
             EventBus.Unsubscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
             EventBus.Unsubscribe<EntityRotationUpdateEvent>(OnEntityRotationUpdate);
+            EventBus.Unsubscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
         }
 
         private void OnPlayerCreated(in PlayerCreatedEvent playerCreatedEventData)
@@ -44,11 +47,11 @@ namespace View.LogicView.Controllers
             Vector3 position = Vector3.zero;
             Quaternion rotation = Quaternion.identity;
 
-            PlayerView instance = playerViewPrefab.Spawn(playerCreatedEventData.id, playerCreatedEventData.possess, position, rotation, transform);
+            PlayerView instance = playerViewPrefab.Spawn(playerCreatedEventData.id, playerCreatedEventData.possess, position + playersParent.position, rotation * playersParent.rotation, playersParent);
 
             players.Add(instance.ID, instance);
         }
-        
+
         private void OnEntityPositionUpdate(in EntityPositionUpdateEvent entityPositionUpdateEventData)
         {
             if (players.TryGetValue(entityPositionUpdateEventData.ID, out PlayerView playerView))
@@ -62,6 +65,14 @@ namespace View.LogicView.Controllers
             if (players.TryGetValue(entityRotationUpdateEventData.ID, out PlayerView playerView))
             {
                 playerView.transform.rotation = new Quaternion(entityRotationUpdateEventData.Rotation.X, entityRotationUpdateEventData.Rotation.Y, entityRotationUpdateEventData.Rotation.Z, entityRotationUpdateEventData.Rotation.W);
+            }
+        }
+
+        private void OnEntityVelocityUpdate(in EntityVelocityUpdateEvent velocityData)
+        {
+            if (players.TryGetValue(velocityData.ID, out PlayerView playerView))
+            {
+                playerView.SetDesiredVelocity(new Vector3(velocityData.Velocity.X, velocityData.Velocity.Y, velocityData.Velocity.Z));
             }
         }
     }
