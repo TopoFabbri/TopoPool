@@ -10,11 +10,10 @@ using System.Xml.Linq;
 using Architecture.Console;
 using Architecture.Logic.Saving;
 using ImageCampus.ToolBox.ServiceProvider;
-using ImageCampus.ToolBox.Updateable;
 
 namespace Architecture.Logic
 {
-    internal class Settings : IService, IInitable, IDisposable
+    internal class Settings : IService, IDisposable
     {
         private readonly string filePath;
 
@@ -29,15 +28,8 @@ namespace Architecture.Logic
         internal Settings(string filePath)
         {
             this.filePath = Path.Combine(filePath, "Settings.json");
-        }
-
-        public void Init()
-        {
+            
             Load();
-        }
-
-        public void LateInit()
-        {
         }
 
         public void Dispose()

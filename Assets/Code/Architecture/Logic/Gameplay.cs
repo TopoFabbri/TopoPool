@@ -26,7 +26,6 @@ namespace Architecture.Logic
         public void Init()
         {
             scene.Init();
-            Settings.Init();
 
             GameConsole.Log("Gameplay initialized");
         }
@@ -34,7 +33,6 @@ namespace Architecture.Logic
         public void LateInit()
         {
             scene.LateInit();
-            Settings.LateInit();
 
             GameConsole.Log("Gameplay late initialized");
         }
