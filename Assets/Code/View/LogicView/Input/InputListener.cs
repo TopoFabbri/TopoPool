@@ -36,8 +36,6 @@ namespace View.LogicView.Input
         public void OnSelect()
         {
             GameObject pointedObject = WorldCursor.GetPointedObject();
-            
-            Debug.Log(pointedObject);
         }
     }
 }
