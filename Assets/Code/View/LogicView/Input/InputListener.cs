@@ -5,11 +5,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Vector3 = System.Numerics.Vector3;
 
-namespace View.LogicView
+namespace View.LogicView.Input
 {
-    public class InputListener : MonoBehaviour
+    internal sealed class InputListener : MonoBehaviour
     {
         EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        WorldCursor WorldCursor => ServiceProvider.Instance.GetService<WorldCursor>();
         
         public void OnMove(InputValue input)
         {
@@ -30,6 +31,13 @@ namespace View.LogicView
             float value = input.Get<float>();
             
             EventBus.Raise<ChangeSpeedEvent>(value);
+        }
+
+        public void OnSelect()
+        {
+            GameObject pointedObject = WorldCursor.GetPointedObject();
+            
+            Debug.Log(pointedObject);
         }
     }
 }

@@ -475,6 +475,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: View::View.LogicView.EntitiesView.PlayersViewController
   playerViewPrefab: {fileID: 701459673554819882, guid: 7a89ae2c86e31154e8bda414c7638b48, type: 3}
+  playersParent: {fileID: 888498097}
 --- !u!1 &1122989161
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,6 +637,9 @@ MonoBehaviour:
   consoleView: {fileID: 1426612141}
   ballsViewController: {fileID: 986519669}
   playersViewController: {fileID: 1115610648}
+  pointerMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1001 &133893957346146299
 PrefabInstance:
   m_ObjectHideFlags: 0

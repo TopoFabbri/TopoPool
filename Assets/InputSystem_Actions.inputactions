@@ -32,6 +32,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "402ddc4b-cd7e-4f3b-b262-32d54e9d5c19",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -263,6 +272,17 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "ChangeSpeed",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c851dfc-70ee-4400-92e6-ca5c623241ee",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Select",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

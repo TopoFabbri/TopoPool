@@ -1,8 +1,10 @@
 ﻿using System;
 using Architecture.Logic;
+using ImageCampus.ToolBox.ServiceProvider;
 using ImageCampus.ToolBox.Updateable;
 using UnityEngine;
 using View.LogicView.Controllers;
+using View.LogicView.Input;
 
 namespace View.LogicView
 {
@@ -11,12 +13,16 @@ namespace View.LogicView
         [SerializeField] private ConsoleView           consoleView;
         [SerializeField] private BallsViewController   ballsViewController;
         [SerializeField] private PlayersViewController playersViewController;
+        [SerializeField] private LayerMask             pointerMask;
 
         private Gameplay gameplay;
+
+        private ServiceProvider ServiceProvider => ServiceProvider.Instance;
 
         private void Awake()
         {
             gameplay = new Gameplay(Application.persistentDataPath);
+            ServiceProvider.AddService<WorldCursor>(new WorldCursor(pointerMask));
         }
 
         private void Start()
