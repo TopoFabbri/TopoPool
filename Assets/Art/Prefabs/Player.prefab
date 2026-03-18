@@ -368,6 +368,9 @@ MonoBehaviour:
   rb: {fileID: 6502347932856347940}
   stick: {fileID: 8155044757381070766}
   stickPoint: {fileID: 7859758759460153052}
+  sweepMask:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!20 &2740627466212220054
 Camera:
   m_ObjectHideFlags: 0

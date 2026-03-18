@@ -21,6 +21,7 @@ namespace Architecture.Logic
 
         [Save] public float HorizontalSensitivity { get; set; } = 1f;
         [Save] public float VerticalSensitivity   { get; set; } = 1f;
+        [Save] public float StickSensitivity      { get; set; } = .1f;
         [Save] public float MinVerticalAngle      { get; set; } = -90f;
         [Save] public float MaxVerticalAngle      { get; set; } = 90f;
 

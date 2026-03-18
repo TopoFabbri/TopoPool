@@ -64,7 +64,7 @@ namespace Architecture.Logic.Entities.PlayerStates
 
         private void CalculateNewPos(out float newPos, float rotDelta, float curPos)
         {
-            float moveDelta = rotDelta * Settings.VerticalSensitivity * Time.Delta;
+            float moveDelta = rotDelta * Settings.StickSensitivity * Time.Delta;
             newPos = curPos + moveDelta;
 
             newPos = Math.Clamp(newPos, -0.5f, 0.05f);

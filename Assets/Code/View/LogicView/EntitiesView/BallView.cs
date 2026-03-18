@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace View.LogicView.EntitiesView
 {
@@ -21,7 +22,13 @@ namespace View.LogicView.EntitiesView
 
         public void AddForce(Vector3 force, Vector3 point)
         {
-            rb.AddForceAtPosition(force, point, ForceMode.Impulse);
+            StartCoroutine(AddForceCoroutine(force, point));
+        }
+
+        private IEnumerator AddForceCoroutine(Vector3 force, Vector3 point, ForceMode mode = ForceMode.Impulse)
+        {
+            yield return new WaitForFixedUpdate();
+            rb.AddForceAtPosition(force, point, mode);
         }
     }
 }
