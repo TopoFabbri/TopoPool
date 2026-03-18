@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using Architecture.Events;
 using Architecture.Logic.Entities.PlayerStates;
@@ -10,11 +11,15 @@ namespace Architecture.Logic.Entities
 {
     public class Player : Entity
     {
-        private float moveSpeed = 10f;
+        private const int MAX_VELOCITY_SAMPLES = 4;
+            
+        private       float moveSpeed            = 10f;
 
         private Vector3 moveVector;
         private Vector2 rotationDelta;
-
+        private Queue<float> stickVelHistory = new(MAX_VELOCITY_SAMPLES);
+        
+        private float   stickPos;
         private Vector2 rotation;
 
         private bool isMainPlayer;
@@ -23,9 +28,6 @@ namespace Architecture.Logic.Entities
 
         EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         Settings Settings => ServiceProvider.Instance.GetService<Settings>();
-
-        private Action<Vector2, Quaternion> RotationSetter => SetRotation;
-        private Action<Vector3>    VelocitySetter => RaiseVelocityUpdateEvent;
 
         public Player(uint id) : base(id)
         {
@@ -73,15 +75,21 @@ namespace Architecture.Logic.Entities
             
             fsm.AddState<PlayerFreeCamState>(PlayerStates.PlayerStates.FreeCam, onTickParameters: () => new object[]
             {
-                RotationSetter,
-                VelocitySetter,
+                (Action<Vector2, Quaternion>)SetRotation,
+                (Action<Vector3>)RaiseVelocityUpdateEvent,
                 rotation,
                 rotationDelta,
                 moveVector,
                 moveSpeed
             });
 
-            fsm.AddState<PlayerStickModeState>(PlayerStates.PlayerStates.StickMode);
+            fsm.AddState<PlayerStickModeState>(PlayerStates.PlayerStates.StickMode, onTickParameters: () => new object[]
+            {
+                (Action<float, float>)RaiseStickMovementEvent,
+                rotationDelta,
+                stickPos,
+                stickVelHistory
+            });
             
             fsm.SetTransition(PlayerStates.PlayerStates.FreeCam, PlayerFlags.EnterStickMode, PlayerStates.PlayerStates.StickMode);
             
@@ -103,6 +111,12 @@ namespace Architecture.Logic.Entities
             moveSpeed += changeSpeedEventData.Value;
 
             moveSpeed = Math.Clamp(moveSpeed, Settings.MinSpeed, Settings.MaxSpeed);
+        }
+        
+        private void RaiseStickMovementEvent(float pos, float avgVel)
+        {
+            stickPos = pos;
+            EventBus.Raise<StickMovementIntentEvent>(Id, pos, avgVel);
         }
         
         private void RaiseVelocityUpdateEvent(Vector3 vel) => EventBus.Raise<EntityVelocityUpdateEvent>(Id, vel);

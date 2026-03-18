@@ -24,6 +24,7 @@ namespace View.LogicView.Controllers
             EventBus.Subscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
             EventBus.Subscribe<EntityRotationUpdateEvent>(OnEntityRotationUpdate);
             EventBus.Subscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
+            EventBus.Subscribe<StickMovementIntentEvent>(OnStickIntent);
         }
 
         public void LateInit()
@@ -40,6 +41,7 @@ namespace View.LogicView.Controllers
             EventBus.Unsubscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
             EventBus.Unsubscribe<EntityRotationUpdateEvent>(OnEntityRotationUpdate);
             EventBus.Unsubscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
+            EventBus.Unsubscribe<StickMovementIntentEvent>(OnStickIntent);
         }
 
         private void OnPlayerCreated(in PlayerCreatedEvent playerCreatedEventData)
@@ -73,6 +75,14 @@ namespace View.LogicView.Controllers
             if (players.TryGetValue(velocityData.ID, out PlayerView playerView))
             {
                 playerView.SetDesiredVelocity(new Vector3(velocityData.Velocity.X, velocityData.Velocity.Y, velocityData.Velocity.Z));
+            }
+        }
+        
+        private void OnStickIntent(in StickMovementIntentEvent stickIntentData)
+        {
+            if (players.TryGetValue(stickIntentData.ID, out PlayerView playerView))
+            {
+                playerView.UpdateStick(stickIntentData.AvgVel, stickIntentData.ForwardPos);
             }
         }
     }

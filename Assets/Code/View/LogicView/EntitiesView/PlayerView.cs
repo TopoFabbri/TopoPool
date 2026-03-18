@@ -51,5 +51,10 @@ namespace View.LogicView.EntitiesView
         {
             desiredVelocity = velocity;
         }
+
+        public void UpdateStick(float avgVel, float forwardPos)
+        {
+            Debug.Log($"Stick: Avg vel: {avgVel}, Forward pos: {forwardPos}");
+        }
     }
 }
