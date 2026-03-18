@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using Architecture.Events;
+using Architecture.Logic.Entities;
 using ImageCampus.ToolBox.Events;
 using ImageCampus.ToolBox.ServiceProvider;
 using ImageCampus.ToolBox.Updateable;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using View.LogicView.EntitiesView;
 
 namespace View.LogicView.Controllers
 {
-    internal sealed class BallsViewController : MonoBehaviour, IInitable, ITickable, IDisposable
+    internal sealed class BallsViewController : SerializedMonoBehaviour, IInitable, ITickable, IDisposable
     {
-        [SerializeField] private BallView  whiteBallView;
-        [SerializeField] private BallView  stripeBallView;
-        [SerializeField] private BallView  solidBallView;
         [SerializeField] private Transform parent;
 
+        [SerializeField] private Dictionary<Ball.Type, BallView> ballViewPrefabs;
+        
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
         private readonly Dictionary<uint, BallView> balls = new();
@@ -47,15 +48,7 @@ namespace View.LogicView.Controllers
             Vector3 position = new(ballCreatedData.position.X, ballCreatedData.position.Y, ballCreatedData.position.Z);
             Quaternion rotation = new(ballCreatedData.rotation.X, ballCreatedData.rotation.Y, ballCreatedData.rotation.Z, ballCreatedData.rotation.W);
 
-            BallView instance;
-            if (ballCreatedData.isWhite)
-            {
-                instance = whiteBallView.Spawn(ballCreatedData.id, false, position, rotation, parent);
-            }
-            else
-            {
-                instance = ballCreatedData.solid ? solidBallView.Spawn(ballCreatedData.id, true, position, rotation, parent) : stripeBallView.Spawn(ballCreatedData.id, false, position, rotation, parent);
-            }
+            BallView instance = ballViewPrefabs[ballCreatedData.type].Spawn(ballCreatedData.id, position, rotation, parent);
             
             balls.Add(instance.ID, instance);
         }

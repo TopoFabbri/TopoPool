@@ -8,14 +8,12 @@ namespace View.LogicView.EntitiesView
         [SerializeField] private Rigidbody rb;
         
         public  uint ID { get; private set; }
-        private bool solid;
         
-        public BallView Spawn(uint id, bool solid, Vector3 position, Quaternion rotation, Transform parent)
+        public BallView Spawn(uint id, Vector3 position, Quaternion rotation, Transform parent)
         {
             BallView instance = Instantiate(this, position, rotation, parent);
             
             instance.ID = id;
-            instance.solid = solid;
             
             return instance;
         }

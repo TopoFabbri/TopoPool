@@ -1,6 +1,7 @@
 ﻿using System;
 using Architecture.Events;
 using Architecture.Logic.Entities;
+using Architecture.Logic.Entities.BallRacks;
 using ImageCampus.ToolBox.Events;
 using ImageCampus.ToolBox.ServiceProvider;
 using ImageCampus.ToolBox.Updateable;
@@ -16,11 +17,11 @@ namespace Architecture.Logic
         private EntityFactory EntityFactory => ServiceProvider.Instance.GetService<EntityFactory>();
         private EventBus      EventBus      => ServiceProvider.Instance.GetService<EventBus>();
 
-        public Scene(int ballCount)
+        public Scene(IPoolRack rack)
         {
             ServiceProvider.Instance.AddService<EntityFactory>(new EntityFactory());
 
-            ballsLogic = new BallsLogic(ballCount);
+            ballsLogic = new BallsLogic(rack);
         }
 
         public void Init()

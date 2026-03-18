@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using Architecture.Events;
 using Architecture.Logic.Entities;
+using Architecture.Logic.Entities.BallRacks;
 using ImageCampus.ToolBox.Events;
 using ImageCampus.ToolBox.ServiceProvider;
 using ImageCampus.ToolBox.Updateable;
@@ -11,34 +12,50 @@ namespace Architecture.Logic
 {
     internal sealed class BallsLogic : IInitable, ITickable, IDisposable
     {
-        private readonly int ballCount;
-        
+        IPoolRack rack;
+
         private readonly Dictionary<uint, Ball> balls = new();
 
-        EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        EventBus      EventBus      => ServiceProvider.Instance.GetService<EventBus>();
         EntityFactory EntityFactory => ServiceProvider.Instance.GetService<EntityFactory>();
 
-        public BallsLogic(int ballCount)
+        public BallsLogic(IPoolRack rack)
         {
-            this.ballCount = ballCount;
+            this.rack = rack;
+            
+            if (rack == null)
+                this.rack = new DefaultRack();
         }
-        
+
         public void Init()
         {
-            Ball whiteBall = EntityFactory.CreateEntity<Ball>(new Vector3(-.3f, 0, 0), false, true);
-            
-            balls.Add(whiteBall.Id, whiteBall);
-            
-            for (int i = 0; i < ballCount; i++)
+            foreach (Vector3 pos in rack.WhiteRack)
             {
-                Ball instance = EntityFactory.CreateEntity<Ball>(new Vector3(i * .1f, 0, 0), i >= ballCount / 2, false);
-                
-                balls.Add(instance.Id, instance);
+                Ball whiteBall = EntityFactory.CreateEntity<Ball>(pos, Ball.Type.White);
+                balls.Add(whiteBall.Id, whiteBall);
             }
-            
+
+            foreach (Vector3 pos in rack.BlackRack)
+            {
+                Ball whiteBall = EntityFactory.CreateEntity<Ball>(pos, Ball.Type.Black);
+                balls.Add(whiteBall.Id, whiteBall);
+            }
+
+            foreach (Vector3 pos in rack.SolidRack)
+            {
+                Ball solidBall = EntityFactory.CreateEntity<Ball>(pos, Ball.Type.Solid);
+                balls.Add(solidBall.Id, solidBall);
+            }
+
+            foreach (Vector3 pos in rack.StripeRack)
+            {
+                Ball stripeBall = EntityFactory.CreateEntity<Ball>(pos, Ball.Type.Stripe);
+                balls.Add(stripeBall.Id, stripeBall);
+            }
+
             foreach (Ball ball in balls.Values)
                 ball.Init();
-            
+
             EventBus.Subscribe<PhysicsEntityUpdatedState>(OnBallUpdatedState);
         }
 
@@ -58,7 +75,7 @@ namespace Architecture.Logic
         {
             foreach (Ball ball in balls.Values)
                 ball.Dispose();
-            
+
             EventBus.Unsubscribe<PhysicsEntityUpdatedState>(OnBallUpdatedState);
         }
 

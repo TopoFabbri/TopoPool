@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6719489380250873290
+--- !u!1001 &4544565775651807387
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -8,21 +8,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 109673163231698532, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
-      propertyPath: m_Mass
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 1289756624600896699, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 747f8c1920b07a244aaf194fb7cf5344, type: 2}
+      objectReference: {fileID: 2100000, guid: 1e0c2204c2d21e14584a696174ad5b88, type: 2}
+    - target: {fileID: 1289756624600896699, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 1e0c2204c2d21e14584a696174ad5b88, type: 2}
     - target: {fileID: 2095571419363010130, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
       propertyPath: m_Name
-      value: White
-      objectReference: {fileID: 0}
-    - target: {fileID: 2095571419363010130, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
-      propertyPath: m_Layer
-      value: 7
+      value: Black
       objectReference: {fileID: 0}
     - target: {fileID: 6082124353005991966, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
       propertyPath: m_LocalPosition.x

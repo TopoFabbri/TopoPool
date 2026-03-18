@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using Architecture.Logic.Entities;
 using ImageCampus.ToolBox.Events;
 
 namespace Architecture.Events
@@ -8,16 +9,14 @@ namespace Architecture.Events
         public Vector3 position;
         public Quaternion rotation;
         public uint id;
-        public bool solid;
-        public bool isWhite;
+        public Ball.Type type;
         
         public void Assign(params object[] parameters)
         {
             position = (Vector3)parameters[0];
             rotation = (Quaternion)parameters[1];
             id = (uint)parameters[2];
-            solid = (bool)parameters[3];
-            isWhite = (bool)parameters[4];
+            type = (Ball.Type)parameters[3];
         }
 
         public void Reset()
@@ -25,8 +24,7 @@ namespace Architecture.Events
             position = Vector3.Zero;
             rotation = Quaternion.Identity;
             id = 0;
-            solid = false;
-            isWhite = false;
+            type = Ball.Type.White;
         }
     }
 }

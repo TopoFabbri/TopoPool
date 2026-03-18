@@ -7,8 +7,15 @@ namespace Architecture.Logic.Entities
 {
     public sealed class Ball : Entity
     {
-        public bool Solid { get; private set; }
-        public bool IsWhite { get; private set;}
+        public enum Type
+        {
+            White,
+            Solid,
+            Stripe,
+            Black
+        }
+
+        public Type type;
      
         EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         
@@ -19,15 +26,14 @@ namespace Architecture.Logic.Entities
         public override void Configure(params object[] parameters)
         {
             UpdatePosition((Vector3) parameters[0]);
-            Solid = (bool) parameters[1];
-            IsWhite = (bool) parameters[2];
+            type = (Type) parameters[1];
         }
 
         public override void Init()
         {
             base.Init();
             
-            EventBus.Raise<BallCreatedEvent>(Position, Rotation, Id, Solid, IsWhite);
+            EventBus.Raise<BallCreatedEvent>(Position, Rotation, Id, type);
         }
     }
 }

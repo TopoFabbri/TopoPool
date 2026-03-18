@@ -12,7 +12,7 @@ namespace Architecture.Logic
         private Time            Time            => ServiceProvider.GetService<Time>();
         private Settings        Settings        => ServiceProvider.GetService<Settings>();
 
-        private Scene scene;
+        private readonly Scene scene;
 
         public Gameplay(string persistentDataPath)
         {
@@ -20,7 +20,7 @@ namespace Architecture.Logic
             ServiceProvider.AddService<EventBus>(new EventBus());
             ServiceProvider.AddService<Settings>(new Settings(persistentDataPath));
 
-            scene = new Scene(10);
+            scene = new Scene(null);
         }
 
         public void Init()

@@ -352,9 +352,93 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527de23eaba1429ba8e9a65840701d28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: View::View.LogicView.EntitiesView.BallsViewController
-  whiteBallView: {fileID: 5190869711836131387, guid: 13cf8bd95c3c44d479f8a0fc5804a4d5, type: 3}
-  stripeBallView: {fileID: -7689395547789107727, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
-  solidBallView: {fileID: 4948008867370957573, guid: 43a12a465242e1248a0c62a4645befdd, type: 3}
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 5190869711836131387, guid: 13cf8bd95c3c44d479f8a0fc5804a4d5, type: 3}
+    - {fileID: 4948008867370957573, guid: 43a12a465242e1248a0c62a4645befdd, type: 3}
+    - {fileID: -7689395547789107727, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
+    - {fileID: 3051273426591350122, guid: 8721332562786594c92817e0ce054b22, type: 3}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: ballViewPrefabs
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[Architecture.Logic.Entities.Ball+Type,
+        Architecture],[View.LogicView.EntitiesView.BallView, View]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[Architecture.Logic.Entities.Ball+Type,
+        Architecture]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 0
+    - Name: $v
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 10
+      Data: 2
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 10
+      Data: 3
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
   parent: {fileID: 690640011}
 --- !u!1 &1022331688
 GameObject:
