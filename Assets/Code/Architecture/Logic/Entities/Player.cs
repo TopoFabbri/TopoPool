@@ -54,6 +54,8 @@ namespace Architecture.Logic.Entities
             base.Tick(deltaTime);
 
             fsm.Tick();
+            
+            rotationDelta = Vector2.Zero;
         }
 
         public override void Dispose()
@@ -93,7 +95,7 @@ namespace Architecture.Logic.Entities
 
         private void OnRotateEvent(in RotateEvent rotateEventData)
         {
-            rotationDelta = rotateEventData.rotation;
+            rotationDelta += rotateEventData.rotation;
         }
 
         private void OnChangeSpeedEvent(in ChangeSpeedEvent changeSpeedEventData)
