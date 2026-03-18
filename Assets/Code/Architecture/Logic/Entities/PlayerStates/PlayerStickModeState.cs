@@ -67,7 +67,7 @@ namespace Architecture.Logic.Entities.PlayerStates
             float moveDelta = rotDelta * Settings.StickSensitivity * Time.Delta;
             newPos = curPos + moveDelta;
 
-            newPos = Math.Clamp(newPos, -0.5f, 0.05f);
+            newPos = Math.Clamp(newPos, Settings.StickRangeMin, Settings.StickRangeMax);
         }
 
         private void CalculateInstantVelocity(out float instantVelocity, float newPos, float curPos)

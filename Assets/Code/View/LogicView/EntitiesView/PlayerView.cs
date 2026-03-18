@@ -1,18 +1,22 @@
 ﻿using Architecture.Events;
+using Architecture.Logic;
 using ImageCampus.ToolBox.Events;
 using ImageCampus.ToolBox.ServiceProvider;
+using ImageCampus.ToolBox.Updateable;
 using UnityEngine;
 
 namespace View.LogicView.EntitiesView
 {
-    internal class PlayerView : MonoBehaviour
+    internal class PlayerView : MonoBehaviour, ITickable
     {
         [SerializeField] private Camera    cam;
         [SerializeField] private Rigidbody rb;
         [SerializeField] private Transform stick;
         [SerializeField] private Transform stickPoint;
+        [SerializeField] private Transform aimDot;
         [SerializeField] private LayerMask sweepMask;
-        
+        [SerializeField] private LayerMask aimMask;
+
         private System.Numerics.Vector3    position;
         private System.Numerics.Quaternion rotation;
         private Vector3                    desiredVelocity;
@@ -22,6 +26,7 @@ namespace View.LogicView.EntitiesView
         public uint ID { get; private set; }
 
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
+        private Settings Settings => ServiceProvider.Instance.GetService<Settings>();
 
         public PlayerView Spawn(uint id, bool possess, Vector3 position, Quaternion rotation, Transform parent)
         {
@@ -35,6 +40,11 @@ namespace View.LogicView.EntitiesView
             return instance;
         }
 
+        public void Tick(float deltaTime)
+        {
+            UpdateAimDot();
+        }
+
         private void FixedUpdate()
         {
             if (rb.IsSleeping() && desiredVelocity.sqrMagnitude == 0)
@@ -46,6 +56,29 @@ namespace View.LogicView.EntitiesView
             EventBus.Raise<PhysicsEntityUpdatedState>(ID, position, rotation);
         }
 
+        private void UpdateAimDot()
+        {
+            if (!aimDot) return;
+
+            float radius = stick.localScale.x / 2f;
+            Vector3 origin = stickPoint.position;
+            Vector3 direction = stick.up;
+            float distance = Settings.StickRangeMax - stick.localPosition.z;
+            
+            if (Physics.SphereCast(origin, radius, direction, out RaycastHit hitInfo, distance, aimMask))
+            {
+                aimDot.position = hitInfo.point;
+
+                if (!aimDot.gameObject.activeSelf) 
+                    aimDot.gameObject.SetActive(true);
+            }
+            else
+            {
+                if (aimDot.gameObject.activeSelf) 
+                    aimDot.gameObject.SetActive(false);
+            }
+        }
+        
         private void UpdatePositionAndRotation()
         {
             position = new System.Numerics.Vector3(transform.position.x, transform.position.y, transform.position.z);
@@ -60,17 +93,17 @@ namespace View.LogicView.EntitiesView
         public void UpdateStick(float avgVel, float forwardPos)
         {
             float prevPos = stickPos;
-            
+
             avgStickVel = avgVel;
             stickPos = forwardPos;
-            
+
             float delta = stickPos - prevPos;
-            
+
             float hitDis = StickSweep(delta);
-            
+
             if (hitDis < delta)
                 stickPos = prevPos + hitDis;
-            
+
             stick.localPosition = new Vector3(stick.localPosition.x, stick.localPosition.y, stickPos);
         }
 
@@ -78,19 +111,17 @@ namespace View.LogicView.EntitiesView
         {
             if (delta <= 0)
                 return delta;
-            
+
             float radius = stick.localScale.x / 2f;
             Vector3 origin = stickPoint.position;
             Vector3 direction = stick.up;
 
-            Debug.DrawRay(origin, direction * delta, Color.red, 0.1f);
-
             if (!Physics.SphereCast(origin, radius, direction, out RaycastHit hitInfo, delta, sweepMask))
                 return delta;
-            
+
             if (hitInfo.transform.TryGetComponent(out BallView ballView))
                 ballView.AddForce(direction * avgStickVel, hitInfo.point);
-            
+
             return delta - hitInfo.distance;
         }
     }

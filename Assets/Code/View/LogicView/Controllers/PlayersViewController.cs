@@ -33,6 +33,8 @@ namespace View.LogicView.Controllers
 
         public void Tick(float deltaTime)
         {
+            foreach (PlayerView player in players.Values)
+                player.Tick(deltaTime);
         }
 
         public void Dispose()

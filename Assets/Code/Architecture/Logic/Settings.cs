@@ -13,7 +13,7 @@ using ImageCampus.ToolBox.ServiceProvider;
 
 namespace Architecture.Logic
 {
-    internal class Settings : IService, IDisposable
+    public class Settings : IService, IDisposable
     {
         private readonly string filePath;
 
@@ -25,6 +25,9 @@ namespace Architecture.Logic
         [Save] public float MinVerticalAngle      { get; set; } = -90f;
         [Save] public float MaxVerticalAngle      { get; set; } = 90f;
 
+        [Save] public float StickRangeMin { get; set; } = -0.5f;
+        [Save] public float StickRangeMax { get; set; } = 0.05f;
+        
         [Save] public float MinSpeed { get; set; } = 0.01f;
         [Save] public float MaxSpeed { get; set; } = 10f;
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1289756624600896699}
   - component: {fileID: 2252730632916434145}
   - component: {fileID: 109673163231698532}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: 8BallStripe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
