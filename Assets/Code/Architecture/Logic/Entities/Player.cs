@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Numerics;
 using Architecture.Events;
+using Architecture.Logic.Entities.PlayerStates;
 using ImageCampus.ToolBox.Events;
 using ImageCampus.ToolBox.ServiceProvider;
+using ImageCampus.ToolBox.StateMachine;
 
 namespace Architecture.Logic.Entities
 {
@@ -13,13 +15,17 @@ namespace Architecture.Logic.Entities
         private Vector3 moveVector;
         private Vector2 rotationDelta;
 
-        private float pitch;
-        private float yaw;
+        private Vector2 rotation;
 
         private bool isMainPlayer;
 
+        private FSM<PlayerStates.PlayerStates, PlayerFlags> fsm;
+
         EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
         Settings Settings => ServiceProvider.Instance.GetService<Settings>();
+
+        private Action<Vector2, Quaternion> RotationSetter => SetRotation;
+        private Action<Vector3>    VelocitySetter => RaiseVelocityUpdateEvent;
 
         public Player(uint id) : base(id)
         {
@@ -39,15 +45,15 @@ namespace Architecture.Logic.Entities
             EventBus.Subscribe<ChangeSpeedEvent>(OnChangeSpeedEvent);
 
             EventBus.Raise<PlayerCreatedEvent>(Id, isMainPlayer);
+
+            InitFsm();
         }
 
         public override void Tick(float deltaTime)
         {
             base.Tick(deltaTime);
 
-            CalculateRotation();
-            
-            EventBus.Raise<EntityVelocityUpdateEvent>(Id, Vector3.Transform(moveVector, Rotation));
+            fsm.Tick();
         }
 
         public override void Dispose()
@@ -59,39 +65,50 @@ namespace Architecture.Logic.Entities
             EventBus.Unsubscribe<ChangeSpeedEvent>(OnChangeSpeedEvent);
         }
 
+        private void InitFsm()
+        {
+            fsm = new FSM<PlayerStates.PlayerStates, PlayerFlags>(PlayerStates.PlayerStates.FreeCam);
+            
+            fsm.AddState<PlayerFreeCamState>(PlayerStates.PlayerStates.FreeCam, onTickParameters: () => new object[]
+            {
+                RotationSetter,
+                VelocitySetter,
+                rotation,
+                rotationDelta,
+                moveVector,
+                moveSpeed
+            });
+
+            fsm.AddState<PlayerStickModeState>(PlayerStates.PlayerStates.StickMode);
+            
+            fsm.SetTransition(PlayerStates.PlayerStates.FreeCam, PlayerFlags.EnterStickMode, PlayerStates.PlayerStates.StickMode);
+            
+            fsm.SetTransition(PlayerStates.PlayerStates.StickMode, PlayerFlags.EnterFreeCam, PlayerStates.PlayerStates.FreeCam);
+        }
+
         private void OnMoveEvent(in MoveEvent moveEventData)
         {
-            moveVector = moveEventData.movement * moveSpeed;
+            moveVector = moveEventData.movement;
         }
 
         private void OnRotateEvent(in RotateEvent rotateEventData)
         {
-            rotationDelta.X = rotateEventData.rotation.X * Settings.HorizontalSensitivity;
-            rotationDelta.Y = rotateEventData.rotation.Y * Settings.VerticalSensitivity;
+            rotationDelta = rotateEventData.rotation;
         }
-        
+
         private void OnChangeSpeedEvent(in ChangeSpeedEvent changeSpeedEventData)
         {
             moveSpeed += changeSpeedEventData.Value;
-            
+
             moveSpeed = Math.Clamp(moveSpeed, Settings.MinSpeed, Settings.MaxSpeed);
         }
+        
+        private void RaiseVelocityUpdateEvent(Vector3 vel) => EventBus.Raise<EntityVelocityUpdateEvent>(Id, vel);
 
-        private void CalculateRotation()
+        private void SetRotation(Vector2 rotation, Quaternion quatRotation)
         {
-            if (rotationDelta is { X: 0, Y: 0 }) return;
-
-            yaw += rotationDelta.X;
-            pitch -= rotationDelta.Y;
-
-            if (pitch > 90f) pitch = 90f;
-            else if (pitch < -90f) pitch = -90f;
-
-            Quaternion newRotation = Quaternion.CreateFromYawPitchRoll(yaw * (float)(Math.PI / 180.0), pitch * (float)(Math.PI / 180.0), 0f);
-
-            UpdateRotation(newRotation);
-
-            rotationDelta = Vector2.Zero;
+            this.rotation = rotation;
+            UpdateRotation(quatRotation);
         }
     }
 }

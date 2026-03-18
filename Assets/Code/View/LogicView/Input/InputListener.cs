@@ -33,9 +33,11 @@ namespace View.LogicView.Input
             EventBus.Raise<ChangeSpeedEvent>(value);
         }
 
-        public void OnSelect()
+        public void OnStickModeToggle(InputValue input)
         {
-            GameObject pointedObject = WorldCursor.GetPointedObject();
+            bool isEnteringStickMode = input.Get<float>() > 0f;
+            
+            EventBus.Raise<ToggleStickModeEvent>(isEnteringStickMode);
         }
     }
 }

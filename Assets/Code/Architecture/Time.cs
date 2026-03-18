@@ -6,17 +6,16 @@ namespace Architecture
 {
     public sealed class Time : IService, ITickable, IDisposable
     {
-        public bool IsPersistant => false;
-
         private float lastDeltaTime;
 
-        public Time()
-        {
-        }
+        public bool IsPersistant => false;
+
+        public float Delta { get; private set; }
 
         public void Tick(float deltaTime)
         {
             lastDeltaTime = deltaTime;
+            Delta = deltaTime;
         }
 
         public void Dispose()

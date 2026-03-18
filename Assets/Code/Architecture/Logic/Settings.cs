@@ -19,8 +19,10 @@ namespace Architecture.Logic
 
         public bool IsPersistant => true;
 
-        [Save] public float HorizontalSensitivity { get; set; } = .1f;
-        [Save] public float VerticalSensitivity   { get; set; } = .1f;
+        [Save] public float HorizontalSensitivity { get; set; } = 1f;
+        [Save] public float VerticalSensitivity   { get; set; } = 1f;
+        [Save] public float MinVerticalAngle      { get; set; } = -90f;
+        [Save] public float MaxVerticalAngle      { get; set; } = 90f;
 
         [Save] public float MinSpeed { get; set; } = 0.01f;
         [Save] public float MaxSpeed { get; set; } = 10f;

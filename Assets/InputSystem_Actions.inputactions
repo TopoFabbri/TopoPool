@@ -34,13 +34,13 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "Select",
-                    "type": "Button",
-                    "id": "402ddc4b-cd7e-4f3b-b262-32d54e9d5c19",
-                    "expectedControlType": "",
+                    "name": "StickModeToggle",
+                    "type": "Value",
+                    "id": "f69f20b0-ecc1-4407-9eb8-cf477fae5384",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -277,12 +277,12 @@
                 },
                 {
                     "name": "",
-                    "id": "6c851dfc-70ee-4400-92e6-ca5c623241ee",
-                    "path": "<Mouse>/leftButton",
+                    "id": "7c41f199-49c2-4f8c-ac82-3d9c22fdc6ea",
+                    "path": "<Mouse>/rightButton",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "Select",
+                    "action": "StickModeToggle",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
