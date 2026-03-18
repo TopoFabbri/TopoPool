@@ -324,7 +324,7 @@ MonoBehaviour:
   aimDot: {fileID: 554562922174620804}
   sweepMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 129
   aimMask:
     serializedVersion: 2
     m_Bits: 385

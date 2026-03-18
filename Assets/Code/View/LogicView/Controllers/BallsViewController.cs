@@ -11,6 +11,7 @@ namespace View.LogicView.Controllers
 {
     internal sealed class BallsViewController : MonoBehaviour, IInitable, ITickable, IDisposable
     {
+        [SerializeField] private BallView  whiteBallView;
         [SerializeField] private BallView  stripeBallView;
         [SerializeField] private BallView  solidBallView;
         [SerializeField] private Transform parent;
@@ -46,8 +47,16 @@ namespace View.LogicView.Controllers
             Vector3 position = new(ballCreatedData.position.X, ballCreatedData.position.Y, ballCreatedData.position.Z);
             Quaternion rotation = new(ballCreatedData.rotation.X, ballCreatedData.rotation.Y, ballCreatedData.rotation.Z, ballCreatedData.rotation.W);
 
-            BallView instance = ballCreatedData.solid ? solidBallView.Spawn(ballCreatedData.id, true, position, rotation, parent) : stripeBallView.Spawn(ballCreatedData.id, false, position, rotation, parent);
-
+            BallView instance;
+            if (ballCreatedData.isWhite)
+            {
+                instance = whiteBallView.Spawn(ballCreatedData.id, false, position, rotation, parent);
+            }
+            else
+            {
+                instance = ballCreatedData.solid ? solidBallView.Spawn(ballCreatedData.id, true, position, rotation, parent) : stripeBallView.Spawn(ballCreatedData.id, false, position, rotation, parent);
+            }
+            
             balls.Add(instance.ID, instance);
         }
 

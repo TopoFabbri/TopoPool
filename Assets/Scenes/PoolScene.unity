@@ -352,6 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 527de23eaba1429ba8e9a65840701d28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: View::View.LogicView.EntitiesView.BallsViewController
+  whiteBallView: {fileID: 5190869711836131387, guid: 13cf8bd95c3c44d479f8a0fc5804a4d5, type: 3}
   stripeBallView: {fileID: -7689395547789107727, guid: d845c078ef143bf4eb95c65a2d505ae9, type: 3}
   solidBallView: {fileID: 4948008867370957573, guid: 43a12a465242e1248a0c62a4645befdd, type: 3}
   parent: {fileID: 690640011}

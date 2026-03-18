@@ -25,9 +25,13 @@ namespace Architecture.Logic
         
         public void Init()
         {
+            Ball whiteBall = EntityFactory.CreateEntity<Ball>(new Vector3(-.3f, 0, 0), false, true);
+            
+            balls.Add(whiteBall.Id, whiteBall);
+            
             for (int i = 0; i < ballCount; i++)
             {
-                Ball instance = EntityFactory.CreateEntity<Ball>(new Vector3(i * .2f, 0, 0), i >= ballCount / 2);
+                Ball instance = EntityFactory.CreateEntity<Ball>(new Vector3(i * .1f, 0, 0), i >= ballCount / 2, false);
                 
                 balls.Add(instance.Id, instance);
             }
