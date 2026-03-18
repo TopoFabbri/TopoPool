@@ -42,7 +42,7 @@ namespace Architecture.Logic.Entities.PlayerStates
 
             actions.AddMainThreadBehaviour(0, () =>
             {
-                CalculateNewPos(out float newPos, rotDelta.X, curPos);
+                CalculateNewPos(out float newPos, rotDelta.Y, curPos);
                 CalculateInstantVelocity(out float instantVelocity, newPos, curPos);
                 UpdateVelocityHistory(velocityHistory, instantVelocity);
                 CalculateAverageVelocity(out float averageVelocity, velocityHistory);

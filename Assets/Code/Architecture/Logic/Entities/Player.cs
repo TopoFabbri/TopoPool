@@ -15,9 +15,9 @@ namespace Architecture.Logic.Entities
             
         private       float moveSpeed            = 10f;
 
-        private Vector3 moveVector;
-        private Vector2 rotationDelta;
-        private Queue<float> stickVelHistory = new(MAX_VELOCITY_SAMPLES);
+        private          Vector3      moveVector;
+        private          Vector2      rotationDelta;
+        private readonly Queue<float> stickVelHistory = new(MAX_VELOCITY_SAMPLES);
         
         private float   stickPos;
         private Vector2 rotation;

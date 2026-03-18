@@ -9,15 +9,19 @@ namespace View.LogicView.EntitiesView
     {
         [SerializeField] private Camera    cam;
         [SerializeField] private Rigidbody rb;
+        [SerializeField] private Transform stick;
+        [SerializeField] private Transform stickPoint;
 
         private System.Numerics.Vector3    position;
         private System.Numerics.Quaternion rotation;
-        private Vector3        desiredVelocity;
-        
+        private Vector3                    desiredVelocity;
+        private float                      avgStickVel;
+        private float                      stickPos;
+
         public uint ID { get; private set; }
 
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
-        
+
         public PlayerView Spawn(uint id, bool possess, Vector3 position, Quaternion rotation, Transform parent)
         {
             PlayerView instance = Instantiate(this, position, rotation, parent);
@@ -34,13 +38,13 @@ namespace View.LogicView.EntitiesView
         {
             if (rb.IsSleeping() && desiredVelocity.sqrMagnitude == 0)
                 return;
-            
+
             rb.linearVelocity = new Vector3(desiredVelocity.x, desiredVelocity.y, desiredVelocity.z);
 
             UpdatePositionAndRotation();
             EventBus.Raise<PhysicsEntityUpdatedState>(ID, position, rotation);
         }
-        
+
         private void UpdatePositionAndRotation()
         {
             position = new System.Numerics.Vector3(transform.position.x, transform.position.y, transform.position.z);
@@ -54,7 +58,10 @@ namespace View.LogicView.EntitiesView
 
         public void UpdateStick(float avgVel, float forwardPos)
         {
-            Debug.Log($"Stick: Avg vel: {avgVel}, Forward pos: {forwardPos}");
+            avgStickVel = avgVel;
+            stickPos = forwardPos;
+            
+            stick.localPosition = new Vector3(stick.localPosition.x, stick.localPosition.y, stickPos);
         }
     }
 }
