@@ -85,8 +85,10 @@ namespace View.LogicView.Controllers
         {
             if (!balls.TryGetValue(entityDestroyedEventData.ID, out BallView ballView)) return;
             
-            balls.Remove(ballView.ID);
-            Destroy(ballView.gameObject);
+            Destroy(ballView?.gameObject);
+            
+            if (ballView)
+                balls.Remove(ballView.ID);
         }
     }
 }
