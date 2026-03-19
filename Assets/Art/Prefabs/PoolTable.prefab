@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 202755536472764761}
   - component: {fileID: 1162534541487238125}
   - component: {fileID: 1193282448308725345}
+  - component: {fileID: 6992931069787080294}
   m_Layer: 0
   m_Name: PoolTable
   m_TagString: Untagged
@@ -114,4 +115,26 @@ MeshCollider:
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 2534964839176971238, guid: cf2b40e2be724834e9c341e1a080a258, type: 3}
+  m_Mesh: {fileID: -6692290496178104961, guid: 780ad4bb6c569e94a9ed464dd01ccc51, type: 3}
+--- !u!64 &6992931069787080294
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3012873502353535711}
+  m_Material: {fileID: 13400000, guid: 9d9de1a589c87a641bb855bd9c587cc1, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3600492897572778748, guid: 780ad4bb6c569e94a9ed464dd01ccc51, type: 3}
