@@ -10,7 +10,7 @@ namespace Architecture.Logic
 {
     public sealed class Scene : IInitable, ITickable, IDisposable
     {
-        private BallsLogic ballsLogic;
+        private readonly BallsLogic ballsLogic;
 
         private Player player;
 

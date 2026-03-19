@@ -9,8 +9,8 @@ namespace Architecture.Logic
 {
     public abstract class Entity : IInitable, ITickable, IDisposable
     {
-        protected Vector3    Position { get; private set; }
-        protected Quaternion Rotation { get; private set; }
+        protected internal Vector3    Position { get; private set; }
+        protected          Quaternion Rotation { get; private set; }
 
         public uint Id { get; private set; }
 

@@ -24,8 +24,9 @@ namespace View.LogicView.Controllers
         public void Init()
         {
             EventBus.Subscribe<BallCreatedEvent>(OnBallCreated);
-            EventBus.Subscribe<BallDestroyedEvent>(OnBallDestroyed);
             EventBus.Subscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
+            EventBus.Subscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
+            EventBus.Subscribe<EntityAngularVelocityUpdateEvent>(OnEntityVelocityUpdate);
         }
 
         public void LateInit()
@@ -39,8 +40,9 @@ namespace View.LogicView.Controllers
         public void Dispose()
         {
             EventBus.Unsubscribe<BallCreatedEvent>(OnBallCreated);
-            EventBus.Unsubscribe<BallDestroyedEvent>(OnBallDestroyed);
             EventBus.Unsubscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
+            EventBus.Unsubscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
+            EventBus.Unsubscribe<EntityAngularVelocityUpdateEvent>(OnEntityVelocityUpdate);
         }
 
         private void OnBallCreated(in BallCreatedEvent ballCreatedData)
@@ -53,18 +55,27 @@ namespace View.LogicView.Controllers
             balls.Add(instance.ID, instance);
         }
 
-        private void OnBallDestroyed(in BallDestroyedEvent ballDestroyedData)
-        {
-            balls.Remove(ballDestroyedData.id, out BallView ball);
-
-            Destroy(ball.gameObject);
-        }
-
         private void OnEntityPositionUpdate(in EntityPositionUpdateEvent entityPositionUpdateEventData)
         {
             if (balls.TryGetValue(entityPositionUpdateEventData.ID, out BallView ball))
             {
                 ball.transform.position = new Vector3(entityPositionUpdateEventData.Position.X, entityPositionUpdateEventData.Position.Y, entityPositionUpdateEventData.Position.Z);
+            }
+        }
+
+        private void OnEntityVelocityUpdate(in EntityVelocityUpdateEvent entityVelocityUpdateEventData)
+        {
+            if (balls.TryGetValue(entityVelocityUpdateEventData.ID, out BallView ball))
+            {
+                ball.UpdateVelocity(entityVelocityUpdateEventData.Velocity);
+            }
+        }
+
+        private void OnEntityVelocityUpdate(in EntityAngularVelocityUpdateEvent angularVelocityUpdateEventData)
+        {
+            if (balls.TryGetValue(angularVelocityUpdateEventData.ID, out BallView ball))
+            {
+                ball.UpdateAngularVelocity(angularVelocityUpdateEventData.AngularVelocity);
             }
         }
     }
