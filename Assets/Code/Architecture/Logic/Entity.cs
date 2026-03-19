@@ -57,6 +57,7 @@ namespace Architecture.Logic
 
         public virtual void Dispose()
         {
+            EventBus.Raise<EntityDestroyedEvent>(Id);
         }
     }
 }

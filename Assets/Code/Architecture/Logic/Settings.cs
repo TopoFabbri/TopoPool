@@ -30,6 +30,8 @@ namespace Architecture.Logic
         
         [Save] public float MinSpeed { get; set; } = 0.01f;
         [Save] public float MaxSpeed { get; set; } = 10f;
+        [Save] public float SpeedStride { get; set; } = .5f;
+        [Save] public float MoveSpeed { get; set; } = 2f;
 
         internal Settings(string filePath)
         {

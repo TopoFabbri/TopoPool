@@ -15,7 +15,7 @@ namespace View.LogicView.Controllers
     {
         [SerializeField] private Transform parent;
 
-        [SerializeField] private Dictionary<Ball.Type, BallView> ballViewPrefabs;
+        [SerializeField] private Dictionary<Ball.Type, BallView> ballViewPrefabs = new();
         
         private EventBus EventBus => ServiceProvider.Instance.GetService<EventBus>();
 
@@ -27,6 +27,7 @@ namespace View.LogicView.Controllers
             EventBus.Subscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
             EventBus.Subscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
             EventBus.Subscribe<EntityAngularVelocityUpdateEvent>(OnEntityVelocityUpdate);
+            EventBus.Subscribe<EntityDestroyedEvent>(OnBallDestroyed);
         }
 
         public void LateInit()
@@ -43,16 +44,7 @@ namespace View.LogicView.Controllers
             EventBus.Unsubscribe<EntityPositionUpdateEvent>(OnEntityPositionUpdate);
             EventBus.Unsubscribe<EntityVelocityUpdateEvent>(OnEntityVelocityUpdate);
             EventBus.Unsubscribe<EntityAngularVelocityUpdateEvent>(OnEntityVelocityUpdate);
-        }
-
-        private void OnBallCreated(in BallCreatedEvent ballCreatedData)
-        {
-            Vector3 position = new(ballCreatedData.position.X, ballCreatedData.position.Y, ballCreatedData.position.Z);
-            Quaternion rotation = new(ballCreatedData.rotation.X, ballCreatedData.rotation.Y, ballCreatedData.rotation.Z, ballCreatedData.rotation.W);
-
-            BallView instance = ballViewPrefabs[ballCreatedData.type].Spawn(ballCreatedData.id, position, rotation, parent);
-            
-            balls.Add(instance.ID, instance);
+            EventBus.Unsubscribe<EntityDestroyedEvent>(OnBallDestroyed);
         }
 
         private void OnEntityPositionUpdate(in EntityPositionUpdateEvent entityPositionUpdateEventData)
@@ -77,6 +69,24 @@ namespace View.LogicView.Controllers
             {
                 ball.UpdateAngularVelocity(angularVelocityUpdateEventData.AngularVelocity);
             }
+        }
+
+        private void OnBallCreated(in BallCreatedEvent ballCreatedData)
+        {
+            Vector3 position = new(ballCreatedData.position.X, ballCreatedData.position.Y, ballCreatedData.position.Z);
+            Quaternion rotation = new(ballCreatedData.rotation.X, ballCreatedData.rotation.Y, ballCreatedData.rotation.Z, ballCreatedData.rotation.W);
+
+            BallView instance = ballViewPrefabs[ballCreatedData.type].Spawn(ballCreatedData.id, position, rotation, parent);
+            
+            balls.Add(instance.ID, instance);
+        }
+
+        private void OnBallDestroyed(in EntityDestroyedEvent entityDestroyedEventData)
+        {
+            if (!balls.TryGetValue(entityDestroyedEventData.ID, out BallView ballView)) return;
+            
+            balls.Remove(ballView.ID);
+            Destroy(ballView.gameObject);
         }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace Architecture.Events
 {
-    public struct BallDestroyedEvent : IEvent
+    public struct BallOutsideEvent : IEvent
     {
         public uint id;
         

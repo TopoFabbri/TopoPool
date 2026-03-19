@@ -62,7 +62,33 @@ namespace Architecture.Logic
                 ball.Init();
 
             EventBus.Subscribe<PhysicsEntityUpdatedState>(OnBallUpdatedState);
-            EventBus.Subscribe<BallDestroyedEvent>(OnBallDestroyed);
+            EventBus.Subscribe<BallOutsideEvent>(OnBallOutside);
+            EventBus.Subscribe<BallHoledEvent>(OnBallHoled);
+        }
+
+        private void OnBallHoled(in BallHoledEvent ballHoledEventData)
+        {
+            if (balls.TryGetValue(ballHoledEventData.ID, out Ball ball))
+            {
+                switch (ball.type)
+                {
+                    case Ball.Type.White:
+                        ball.Reset(ballPositions[ballHoledEventData.ID]);
+                        break;
+                    
+                    case Ball.Type.Solid:
+                    case Ball.Type.Stripe:
+                    case Ball.Type.Black:
+                        ballPositions.Remove(ball.Id);
+                        balls.Remove(ball.Id);
+                        ball.Dispose();
+                        break;
+                    
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                    
+            }
         }
 
         public void LateInit()
@@ -83,7 +109,7 @@ namespace Architecture.Logic
                 ball.Dispose();
 
             EventBus.Unsubscribe<PhysicsEntityUpdatedState>(OnBallUpdatedState);
-            EventBus.Unsubscribe<BallDestroyedEvent>(OnBallDestroyed);
+            EventBus.Unsubscribe<BallOutsideEvent>(OnBallOutside);
         }
 
         private void OnBallUpdatedState(in PhysicsEntityUpdatedState physicsEntityUpdatedStateData)
@@ -92,13 +118,11 @@ namespace Architecture.Logic
                 ball.SyncPhysicsState(physicsEntityUpdatedStateData.position, physicsEntityUpdatedStateData.rotation);
         }
 
-        private void OnBallDestroyed(in BallDestroyedEvent ballDestroyedData)
+        private void OnBallOutside(in BallOutsideEvent ballOutsideData)
         {
-            if (!balls.TryGetValue(ballDestroyedData.id, out Ball ball)) return;
+            if (!balls.TryGetValue(ballOutsideData.id, out Ball ball)) return;
             
-            ball.UpdatePosition(ballPositions[ball.Id]);
-            EventBus.Raise<EntityVelocityUpdateEvent>(ballDestroyedData.id, Vector3.Zero);
-            EventBus.Raise<EntityAngularVelocityUpdateEvent>(ballDestroyedData.id, Vector3.Zero);
+            ball.Reset(ballPositions[ballOutsideData.id]);
         }
     }
 }

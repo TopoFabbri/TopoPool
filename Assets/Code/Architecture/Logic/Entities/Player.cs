@@ -12,8 +12,6 @@ namespace Architecture.Logic.Entities
     public class Player : Entity
     {
         private const int MAX_VELOCITY_SAMPLES = 4;
-            
-        private       float moveSpeed            = 10f;
 
         private          Vector3      moveVector;
         private          Vector2      rotationDelta;
@@ -80,7 +78,7 @@ namespace Architecture.Logic.Entities
                 rotation,
                 rotationDelta,
                 moveVector,
-                moveSpeed
+                Settings.MoveSpeed
             });
 
             fsm.AddState<PlayerStickModeState>(PlayerStates.PlayerStates.StickMode, onTickParameters: () => new object[]
@@ -108,9 +106,9 @@ namespace Architecture.Logic.Entities
 
         private void OnChangeSpeedEvent(in ChangeSpeedEvent changeSpeedEventData)
         {
-            moveSpeed += changeSpeedEventData.Value;
+            Settings.MoveSpeed += changeSpeedEventData.Value * Settings.SpeedStride;
 
-            moveSpeed = Math.Clamp(moveSpeed, Settings.MinSpeed, Settings.MaxSpeed);
+            Settings.MoveSpeed = Math.Clamp(Settings.MoveSpeed, Settings.MinSpeed, Settings.MaxSpeed);
         }
         
         private void RaiseStickMovementEvent(float pos, float avgVel)

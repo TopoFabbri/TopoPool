@@ -41,7 +41,9 @@ namespace View.LogicView.EntitiesView
         private void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("Deathzone"))
-                EventBus.Raise<BallDestroyedEvent>(ID);
+                EventBus.Raise<BallOutsideEvent>(ID);
+            else if (other.CompareTag("Hole"))
+                EventBus.Raise<BallHoledEvent>(ID);
         }
     }
 }

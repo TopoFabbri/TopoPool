@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Architecture.Events;
 using ImageCampus.ToolBox.Events;
+using ImageCampus.ToolBox.Pool;
 using ImageCampus.ToolBox.ServiceProvider;
 
 namespace Architecture.Logic.Entities
@@ -34,6 +35,13 @@ namespace Architecture.Logic.Entities
             base.Init();
             
             EventBus.Raise<BallCreatedEvent>(Position, Rotation, Id, type);
+        }
+
+        public void Reset(Vector3 position)
+        {
+            UpdatePosition(position);
+            EventBus.Raise<EntityVelocityUpdateEvent>(Id, Vector3.Zero);
+            EventBus.Raise<EntityAngularVelocityUpdateEvent>(Id, Vector3.Zero);
         }
     }
 }
